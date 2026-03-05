@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>ProTask • HTML CSS JS + Node Mongo</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h1>ProTask</h1>
+          <p>HTML • CSS • JavaScript • Node.js • MongoDB • Docker</p>
+        </div>
+      </div>
+      <div class="status" id="status">Ready</div>
+    </header>
+
+    <main class="grid">
+      <section class="card">
+        <h2>Create Task</h2>
+
+        <div class="row">
+          <input id="taskTitle" placeholder="e.g., Push Docker image to Hub" />
+          <button id="addBtn">Add</button>
+        </div>
+
+        <div class="msg" id="msg"></div>
+
+        <h2 class="mt">Tasks</h2>
+        <div class="list" id="taskList"></div>
+      </section>
+
+      <aside class="card">
+        <h2>Overview</h2>
+        <div class="kpi">
+          <div class="kpiBox">
+            <div class="num" id="total">0</div>
+            <div class="lbl">Total</div>
+          </div>
+          <div class="kpiBox">
+            <div class="num" id="open">0</div>
+            <div class="lbl">Open</div>
+          </div>
+          <div class="kpiBox">
+            <div class="num" id="done">0</div>
+            <div class="lbl">Done</div>
+          </div>
+          <div class="kpiBox">
+            <div class="num" id="progress">0%</div>
+            <div class="lbl">Progress</div>
+          </div>
+        </div>
+
+        <h2 class="mt">Mongo Express</h2>
+        <p class="small">
+          Open: <b>http://localhost:8081</b><br/>
+          Username: <b>admin</b> Password: <b>admin123</b>
+        </p>
+      </aside>
+    </main>
+  </div>
+
+  <script src="./js/app.js"></script>
+</body>
+</html>
