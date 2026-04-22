@@ -1,67 +1,219 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>ProTask • HTML CSS JS + Node Mongo</title>
+  <title>ProTask • Mission Control</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./css/style.css" />
 </head>
 <body>
+
+  <!-- Ambient background orbs -->
+  <div class="ambient">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Floating grid noise overlay -->
+  <div class="grid-overlay"></div>
+
   <div class="container">
+
+    <!-- ── HEADER ─────────────────────────────────────── -->
     <header class="header">
       <div class="brand">
-        <div class="logo"></div>
-        <div>
+        <div class="logo">
+          <div class="logo-inner">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <path d="M3 6h16M3 11h10M3 16h13" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+              <circle cx="18" cy="16" r="3" fill="#00f5c4" stroke="none"/>
+            </svg>
+          </div>
+          <div class="logo-ring"></div>
+        </div>
+        <div class="brand-text">
           <h1>ProTask</h1>
-          <p>HTML • CSS • JavaScript • Node.js • MongoDB • Docker</p>
+          <p class="brand-stack">Node.js &nbsp;·&nbsp; MongoDB &nbsp;·&nbsp; Docker &nbsp;·&nbsp; AWS EC2</p>
         </div>
       </div>
-      <div class="status" id="status">Ready</div>
+
+      <div class="header-right">
+        <div class="status-pill" id="status">
+          <span class="pulse-dot"></span>
+          <span id="statusText">Ready</span>
+        </div>
+
+        <!-- Dark / Light toggle -->
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <span class="toggle-track">
+            <span class="toggle-thumb">
+              <svg class="icon-sun" width="12" height="12" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <svg class="icon-moon" width="12" height="12" viewBox="0 0 24 24" fill="none">
+                <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </span>
+        </button>
+      </div>
     </header>
 
-    <main class="grid">
-      <section class="card">
-        <h2>Create Task</h2>
+    <!-- ── HERO STRIP ─────────────────────────────────── -->
+    <section class="hero">
+      <div class="hero-label">MISSION CONTROL</div>
+      <h2 class="hero-title">
+        Build faster.<br>
+        <span class="accent-gradient">Ship smarter.</span>
+      </h2>
+      <p class="hero-sub">Full-stack task orchestration — from idea to deployment.</p>
+      <div class="hero-stats">
+        <div class="hstat"><span class="hstat-val" id="total">0</span><span class="hstat-lbl">Total</span></div>
+        <div class="hstat-div"></div>
+        <div class="hstat"><span class="hstat-val" id="open">0</span><span class="hstat-lbl">Open</span></div>
+        <div class="hstat-div"></div>
+        <div class="hstat"><span class="hstat-val" id="done">0</span><span class="hstat-lbl">Done</span></div>
+        <div class="hstat-div"></div>
+        <div class="hstat"><span class="hstat-val" id="progress">0%</span><span class="hstat-lbl">Progress</span></div>
+      </div>
+      <!-- progress bar -->
+      <div class="progress-track">
+        <div class="progress-fill" id="progressBar" style="width:0%"></div>
+        <div class="progress-glow" id="progressGlow" style="width:0%"></div>
+      </div>
+    </section>
 
-        <div class="row">
-          <input id="taskTitle" placeholder="e.g., Push Docker image to Hub" />
-          <button id="addBtn">Add</button>
+    <!-- ── MAIN GRID ──────────────────────────────────── -->
+    <main class="grid">
+
+      <!-- Create + List -->
+      <section class="card card-main">
+        <div class="card-head">
+          <h2>Task Queue</h2>
+          <span class="badge" id="taskCount">0 tasks</span>
+        </div>
+
+        <div class="input-group">
+          <div class="input-wrap">
+            <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <input id="taskTitle" placeholder="Describe your next task…" autocomplete="off" />
+          </div>
+          <button id="addBtn" class="btn-primary">
+            <span>Deploy</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
         </div>
 
         <div class="msg" id="msg"></div>
 
-        <h2 class="mt">Tasks</h2>
-        <div class="list" id="taskList"></div>
-      </section>
-
-      <aside class="card">
-        <h2>Overview</h2>
-        <div class="kpi">
-          <div class="kpiBox">
-            <div class="num" id="total">0</div>
-            <div class="lbl">Total</div>
-          </div>
-          <div class="kpiBox">
-            <div class="num" id="open">0</div>
-            <div class="lbl">Open</div>
-          </div>
-          <div class="kpiBox">
-            <div class="num" id="done">0</div>
-            <div class="lbl">Done</div>
-          </div>
-          <div class="kpiBox">
-            <div class="num" id="progress">0%</div>
-            <div class="lbl">Progress</div>
+        <div class="list-header">
+          <span>Active Tasks</span>
+          <div class="filter-tabs">
+            <button class="ftab active" data-filter="all">All</button>
+            <button class="ftab" data-filter="open">Open</button>
+            <button class="ftab" data-filter="done">Done</button>
           </div>
         </div>
 
-        <h2 class="mt">Mongo Express</h2>
-        <p class="small">
-          Open: <b>http://localhost:8081</b><br/>
-          Username: <b>admin</b> Password: <b>admin123</b>
-        </p>
+        <div class="list" id="taskList"></div>
+
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+              <rect x="6" y="8" width="28" height="26" rx="4" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 3"/>
+              <path d="M14 15h12M14 20h8M14 25h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <p>No tasks yet. Add your first task above.</p>
+        </div>
+      </section>
+
+      <!-- Right sidebar -->
+      <aside class="sidebar">
+
+        <!-- Radial gauge card -->
+        <div class="card card-gauge">
+          <div class="card-head">
+            <h2>Progress</h2>
+          </div>
+          <div class="gauge-wrap">
+            <svg class="gauge-svg" viewBox="0 0 120 120">
+              <circle class="gauge-bg" cx="60" cy="60" r="50" />
+              <circle class="gauge-fill" id="gaugeFill" cx="60" cy="60" r="50"
+                stroke-dasharray="314" stroke-dashoffset="314" />
+            </svg>
+            <div class="gauge-center">
+              <span class="gauge-pct" id="gaugePct">0%</span>
+              <span class="gauge-lbl">Complete</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stack card -->
+        <div class="card card-stack">
+          <div class="card-head"><h2>Stack</h2></div>
+          <div class="stack-list">
+            <div class="stack-item">
+              <span class="stack-dot" style="--c:#f7df1e"></span>
+              <span class="stack-name">JavaScript</span>
+              <span class="stack-tag">Frontend</span>
+            </div>
+            <div class="stack-item">
+              <span class="stack-dot" style="--c:#3178c6"></span>
+              <span class="stack-name">Node.js</span>
+              <span class="stack-tag">Backend</span>
+            </div>
+            <div class="stack-item">
+              <span class="stack-dot" style="--c:#00ed64"></span>
+              <span class="stack-name">MongoDB</span>
+              <span class="stack-tag">Database</span>
+            </div>
+            <div class="stack-item">
+              <span class="stack-dot" style="--c:#2496ed"></span>
+              <span class="stack-name">Docker</span>
+              <span class="stack-tag">Container</span>
+            </div>
+            <div class="stack-item">
+              <span class="stack-dot" style="--c:#ff9900"></span>
+              <span class="stack-name">AWS EC2</span>
+              <span class="stack-tag">Cloud</span>
+            </div>
+            <div class="stack-item">
+              <span class="stack-dot" style="--c:#d24939"></span>
+              <span class="stack-name">Jenkins</span>
+              <span class="stack-tag">CI/CD</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DB Admin card -->
+        <div class="card card-db">
+          <div class="card-head"><h2>Mongo Express</h2><span class="badge badge-live">Live</span></div>
+          <p class="db-url">http://localhost:8081</p>
+          <div class="db-creds">
+            <div class="cred-row"><span>User</span><code>admin</code></div>
+            <div class="cred-row"><span>Pass</span><code>admin123</code></div>
+          </div>
+        </div>
+
       </aside>
     </main>
+
+    <!-- ── FOOTER ─────────────────────────────────────── -->
+    <footer class="footer">
+      <span>ProTask &nbsp;·&nbsp; Full-Stack &nbsp;·&nbsp; Deployed on AWS EC2</span>
+      <span class="footer-dot">Powered by Docker &amp; Jenkins CI/CD</span>
+    </footer>
+
   </div>
 
   <script src="./js/app.js"></script>

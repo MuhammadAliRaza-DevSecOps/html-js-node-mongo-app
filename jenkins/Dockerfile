@@ -1,13 +1,22 @@
-FROM jenkins/jenkins:lts
+# ═══════════════════════════════════════════════════════
+#  ProTask · Backend Dockerfile
+#  File: backend/Dockerfile
+#
+#  Build context must be the backend/ folder.
+#  docker-compose.yml uses: build: ../backend
+# ═══════════════════════════════════════════════════════
 
-USER root
+FROM node:20-alpine
 
-# Install docker CLI inside Jenkins container
-RUN apt-get update && \
-    apt-get install -y docker.io && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
 
-# Allow jenkins user to run docker
-RUN usermod -aG docker jenkins
+# Copy package files first (layer cache)
+COPY package*.json ./
+RUN npm ci --omit=dev
 
-USER jenkins
+# Copy source — Dockerfile expects backend/src/
+COPY src ./src
+
+EXPOSE 5000
+
+CMD ["npm", "start"]

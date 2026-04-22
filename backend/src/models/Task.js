@@ -1,11 +1,28 @@
+// ═══════════════════════════════════════════════════════
+//  ProTask · Task Model
+//  File: backend/src/models/Task.js
+// ═══════════════════════════════════════════════════════
+
+"use strict";
+
 const mongoose = require("mongoose");
 
-const TaskSchema = new mongoose.Schema(
+const taskSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true, trim: true, maxlength: 120 },
-    done: { type: Boolean, default: false }
+    title: {
+      type: String,
+      required: [true, "Title is required."],
+      trim: true,
+      minlength: [2, "Title must be at least 2 characters."]
+    },
+    done: {
+      type: Boolean,
+      default: false
+    }
   },
-  { timestamps: true }
+  {
+    timestamps: true   // adds createdAt and updatedAt automatically
+  }
 );
 
-module.exports = mongoose.model("Task", TaskSchema);
+module.exports = mongoose.model("Task", taskSchema);

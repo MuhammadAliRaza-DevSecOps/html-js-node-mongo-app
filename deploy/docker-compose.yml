@@ -1,4 +1,19 @@
+# ═══════════════════════════════════════════════════════
+#  ProTask · Docker Compose
+#  File: deploy/docker-compose.yml
+#
+#  Run from project root:
+#    docker compose -f deploy/docker-compose.yml up --build -d
+#
+#  Services:
+#    mongo         — MongoDB database
+#    mongo-express — DB admin UI at :8081
+#    backend       — Node.js API at :5000
+#    frontend      — Nginx static server + /api proxy at :3000
+# ═══════════════════════════════════════════════════════
+
 services:
+
   mongo:
     image: mongo:7
     container_name: mongo
@@ -22,12 +37,15 @@ services:
       - mongo
 
   backend:
-    build: ../backend
+    build:
+      context: ../backend        # Dockerfile is in backend/
     container_name: backend
     restart: unless-stopped
     environment:
       PORT: 5000
       MONGO_URI: mongodb://mongo:27017/appdb
+      # Frontend is served by Nginx on port 3000 (host) / port 80 (container).
+      # Browsers send requests from the HOST port, so CORS_ORIGIN = host URL.
       CORS_ORIGIN: http://localhost:3000
     ports:
       - "5000:5000"
@@ -35,7 +53,8 @@ services:
       - mongo
 
   frontend:
-    build: ../frontend
+    build:
+      context: ../frontend       # Dockerfile is in frontend/
     container_name: frontend
     restart: unless-stopped
     ports:
