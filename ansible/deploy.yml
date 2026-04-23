@@ -3,6 +3,7 @@
   become: yes
 
   tasks:
+
     - name: Ensure git installed
       apt:
         name: git
@@ -15,6 +16,13 @@
         state: started
         enabled: yes
 
+    - name: Fix repo conflicts (clean old files)
+      shell: |
+        cd /home/ubuntu/html-js-node-mongo-app || exit
+        git fetch origin
+        git reset --hard origin/main
+        git clean -fd
+
     - name: Pull latest code
       shell: |
         cd /home/ubuntu/html-js-node-mongo-app
@@ -26,3 +34,7 @@
         docker compose down
         docker compose build --no-cache
         docker compose up -d
+
+    - name: Cleanup unused docker images
+      shell: |
+        docker system prune -af
